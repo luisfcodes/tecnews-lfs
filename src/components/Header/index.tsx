@@ -1,13 +1,17 @@
+import Link from 'next/link'
 import styles from './styles.module.scss'
 
-export function Header(){
+export function Header() {
   return (
-    <header className={styles.teste}>
-      <div>
-        <img src="" alt="" />
-        TecNews
-        LFS
-      </div>
+    <header className={styles.container}>
+      <Link href='/'>
+        <div className={styles.logo}>
+          <img src="/images/logo.png" alt="Logo" />
+          <div>
+            TecNews LFS
+          </div>
+        </div>
+      </Link>
     </header>
   )
 }
