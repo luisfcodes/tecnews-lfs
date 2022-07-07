@@ -4,7 +4,25 @@ import Link from 'next/link'
 import { createClient } from '../services/prismicio'
 import styles from '../styles/Home.module.scss'
 
-const Home: NextPage = () => {
+interface HomeProps {
+  results: {
+    id: string;
+    uid: string;
+    createdAt: string;
+    data: {
+      title: string;
+      contentPreview: string;
+      author: string;
+      banner: string;
+      content: {
+        subtitle: string;
+        paragraph: string;
+      }[]
+    }
+  }[]
+}
+
+const Home: NextPage<HomeProps> = ({results}) => {
   return (
     <div className={styles.container}>
       <Head>
@@ -14,7 +32,19 @@ const Home: NextPage = () => {
 
       <main>
         <ul>
-          <li className={styles.post}>
+          {results.map(post => (
+            <li className={styles.post} key={post.id}>
+              <img src={post.data.banner} alt="Banner do post" />
+              <div>
+                <Link href='/'>
+                  <h1>{post.data.title}</h1>
+                </Link>
+                <p>{post.data.contentPreview}...</p>
+              </div>
+            </li>
+          ))}
+
+          {/* <li className={styles.post}>
             <img src="https://pbs.twimg.com/profile_images/1004666132253507584/gTEhhS7D_400x400.jpg" alt="" />
             <div>
               <Link href='/'>
@@ -22,9 +52,9 @@ const Home: NextPage = () => {
               </Link>
               <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Cumque natus perferendis beatae? Harum aperiam libero explicabo placeat nobis obcaecati sunt recusandae, labore similique, quis eum quam mollitia. Nisi, quidem totam.</p>
             </div>
-          </li>
+          </li> */}
 
-          <li className={styles.post}>
+          {/* <li className={styles.post}>
             <img src="https://ichef.bbci.co.uk/news/640/cpsprodpb/133CB/production/_103759787_gettyimages-949493748.jpg" alt="" />
             <div>
               <Link href='/'>
@@ -52,7 +82,7 @@ const Home: NextPage = () => {
               </Link>
               <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Cumque natus perferendis beatae? Harum aperiam libero explicabo placeat nobis obcaecati sunt recusandae, labore similique, quis eum quam mollitia. Nisi, quidem totam.</p>
             </div>
-          </li>
+          </li> */}
         </ul>
       </main>
     </div>
@@ -68,21 +98,27 @@ export const getStaticProps: GetStaticProps =  async ({ previewData }) => {
 
   const results = page.map(post => {
     return {
+      id: post.id,
       uid: post.uid,
       createdAt: post.first_publication_date,
       data: {
-        title: post.data.title,
-        author: post.data.author,
-        banner: post.data.banner
-      }
+        title: post.data.title[0].text,
+        contentPreview: post.data.content[0].paragraph[0].text.substring(0,200),
+        author: post.data.author[0].text,
+        banner: post.data.banner.url,
+        content: post.data.content.map((content: any) => {
+            return {
+              subtitle: content.subtitle[0] ? content.subtitle[0].text : '',
+              paragraph: content.paragraph[0].text
+            }
+         })
+        }
     }
   })
 
-  console.log(results[0].data)
-
   return {
     props: {
-      page
+      results
     },
     revalidate: 60 * 60 * 24 //24 hours
   }
