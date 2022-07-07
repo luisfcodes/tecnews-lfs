@@ -1,0 +1,64 @@
+{
+  "id": "03a908eb-cda5-4de3-acf2-0efcbcee396c",
+  "uid": "iusto-officia-quia",
+  "type": "post",
+  "data": {
+    "title": [
+      {
+        "type": "heading1",
+        "text": "Transition cross-platform ROI",
+        "spans": []
+      }
+    ],
+    "author": [
+      {
+        "type": "paragraph",
+        "text": "Pariatur voluptate aliqua ex irure non.",
+        "spans": []
+      }
+    ],
+    "banner": {
+      "dimensions": {
+        "width": 900,
+        "height": 500
+      },
+      "alt": "Placeholder image",
+      "copyright": null,
+      "url": "https://images.unsplash.com/photo-1579931794097-0ad001e51edb?w=900&h=500&fit=crop"
+    },
+    "content": [
+      {
+        "subtitle": [
+          {
+            "type": "heading3",
+            "text": "Target B2C content",
+            "spans": []
+          }
+        ],
+        "paragraph": [
+          {
+            "type": "paragraph",
+            "text": "Incididunt elit ipsum aliqua consectetur magna qui. Laboris id occaecat duis amet laborum ad velit et. Ipsum proident fugiat do nulla esse occaecat elit eiusmod voluptate in excepteur cillum.",
+            "spans": []
+          }
+        ]
+      },
+      {
+        "subtitle": [
+          {
+            "type": "heading3",
+            "text": "Expedite virtual channels",
+            "spans": []
+          }
+        ],
+        "paragraph": [
+          {
+            "type": "paragraph",
+            "text": "Lorem incididunt sunt et. Fugiat ipsum nisi aliquip cillum ut nostrud proident. Est elit do et id elit officia proident.",
+            "spans": []
+          }
+        ]
+      }
+    ]
+  }
+}

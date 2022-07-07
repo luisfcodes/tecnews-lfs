@@ -1,6 +1,7 @@
-import type { NextPage } from 'next'
+import type { GetStaticProps, NextPage } from 'next'
 import Head from 'next/head'
 import Link from 'next/link'
+import { createClient } from '../services/prismicio'
 import styles from '../styles/Home.module.scss'
 
 const Home: NextPage = () => {
@@ -59,3 +60,30 @@ const Home: NextPage = () => {
 }
 
 export default Home
+
+export const getStaticProps: GetStaticProps =  async ({ previewData }) => {
+  const client = createClient({ previewData })
+
+  const page = await client.getAllByType('post')
+
+  const results = page.map(post => {
+    return {
+      uid: post.uid,
+      createdAt: post.first_publication_date,
+      data: {
+        title: post.data.title,
+        author: post.data.author,
+        banner: post.data.banner
+      }
+    }
+  })
+
+  console.log(results[0].data)
+
+  return {
+    props: {
+      page
+    },
+    revalidate: 60 * 60 * 24 //24 hours
+  }
+}

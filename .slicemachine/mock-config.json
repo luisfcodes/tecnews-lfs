@@ -1,0 +1,32 @@
+{
+  "_cts": {
+    "post": {
+      "title": {
+        "config": {
+          "patternType": "HEADING",
+          "blocks": 1
+        }
+      },
+      "author": {
+        "config": {
+          "patternType": "PARAGRAPH",
+          "blocks": 1
+        }
+      },
+      "content": {
+        "subtitle": {
+          "config": {
+            "patternType": "HEADING",
+            "blocks": 1
+          }
+        },
+        "paragraph": {
+          "config": {
+            "patternType": "PARAGRAPH",
+            "blocks": 1
+          }
+        }
+      }
+    }
+  }
+}
