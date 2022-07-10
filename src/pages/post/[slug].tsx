@@ -2,6 +2,8 @@ import { GetStaticPaths, GetStaticProps } from "next"
 import Head from "next/head"
 import { createClient } from "../../services/prismicio"
 
+import styles from './styles.module.scss'
+
 interface PostProps {
   results: {
     id: string;
@@ -28,7 +30,7 @@ export default function Post({ results }: PostProps) {
       </Head>
       <main>
         {results.map(post => (
-          <div>
+          <div className={styles.container}>
             <img src={post.data.banner} alt="Banner do post" />
 
             <h1>{post.data.title}</h1>
