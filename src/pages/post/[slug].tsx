@@ -1,11 +1,13 @@
 import { GetStaticPaths, GetStaticProps } from "next"
 import Head from "next/head"
 import { createClient } from "../../services/prismicio"
+import * as prismicH from '@prismicio/helpers'
 
 import format from "date-fns/format"
 
 import { FiUser, FiCalendar } from 'react-icons/fi'
 import styles from './styles.module.scss'
+import { PrismicRichText, PrismicRichTextProps, PrismicText } from "@prismicio/react"
 
 interface PostProps {
   results: {
@@ -13,15 +15,17 @@ interface PostProps {
     uid: string;
     createdAt: string;
     data: {
-      title: string;
-      contentPreview: string;
+      title: any;
       author: string;
       banner: string;
       content: {
-        subtitle: string;
-        paragraphs: {
-          paragraph: string
-        }[];
+        subtitle: [];
+        paragraphs: any;
+        // paragraphs: {
+        //   paragraph: string;
+        //   image?: string;
+        //   list?: string;
+        // }[];
       }[]
     }
   }[]
@@ -31,14 +35,15 @@ export default function Post({ results }: PostProps) {
   return (
     <>
       <Head>
-        <title>{results[0].data.title}</title>
+        <title>{prismicH.asText(results[0].data.title)}</title>
       </Head>
       <main>
         {results.map(post => (
-          <>
-            <img src={post.data.banner} alt="Banner do post" className={styles.banner} />
+          <div key={post.id}>
+            <img src={post.data.banner} alt="Banner do post" className={styles.banner}/>
             <div className={styles.container}>
-              <h1>{post.data.title}</h1>
+
+              <PrismicRichText field={post.data.title}/>
 
               <div className={styles.postInformations}>
                 <div>
@@ -54,15 +59,15 @@ export default function Post({ results }: PostProps) {
 
               <section>
                 {post.data.content.map(content => (
-                  <>
-                    {content.subtitle && <h2>{content.subtitle}</h2>}
-                    {content.paragraphs.map(paragraphs => <p>{paragraphs.paragraph}</p>)}
-                  </>
+                  <div key={prismicH.asText(content.subtitle)}>
+                    {content.subtitle && <PrismicRichText field={content.subtitle}/>}
+                    <PrismicRichText field={content.paragraphs} />
+                  </div>
                 ))}
               </section>
 
             </div>
-          </>
+          </div>
         ))}
       </main>
     </>
@@ -89,18 +94,13 @@ export const getStaticProps: GetStaticProps = async ({ params, previewData }) =>
       uid: post.uid,
       createdAt: format(new Date(post.first_publication_date), 'dd/MM/yyyy'),
       data: {
-        title: post.data.title[0].text,
-        contentPreview: post.data.content[0].paragraph[0].text.substring(0, 200),
-        author: post.data.author[0].text,
+        title: post.data.title,
+        author: prismicH.asText(post.data.author),
         banner: post.data.banner.url,
         content: post.data.content.map((content: any) => {
           return {
-            subtitle: content.subtitle[0] ? content.subtitle[0].text : '',
-            paragraphs: content.paragraph.map((paragraph: any) => {
-              return {
-                paragraph: paragraph.text
-              }
-            })
+            subtitle: content.subtitle[0] ? content.subtitle : '',
+            paragraphs: content.paragraph
           }
         })
       }

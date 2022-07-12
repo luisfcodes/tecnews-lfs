@@ -18,7 +18,8 @@
     color: var(--gray-100);
   }
 
-  h2 {
+  h3 {
+    font-size: 1.5rem;
     margin-top: 2rem;
     color: var(--gray-100);
   }
@@ -37,5 +38,11 @@
   section {
     margin-top: 3rem;
     line-height: 1.5rem;
+
+    img {
+      display: block;
+      margin: 0 auto;
+      width: 80%;
+    }
   }
 }
