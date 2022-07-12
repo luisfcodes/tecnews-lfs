@@ -24,14 +24,14 @@ interface HomeProps {
 
 const Home: NextPage<HomeProps> = ({results}) => {
   return (
-    <div className={styles.container}>
+    <div>
       <Head>
         <title>TecNews LFS</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
       <main>
-        <ul>
+        <ul className={styles.listPosts}>
           {results.map(post => (
             <li className={styles.post} key={post.id}>
               <img src={post.data.banner} alt="Banner do post" />

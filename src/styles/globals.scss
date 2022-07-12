@@ -16,8 +16,7 @@ body {
   background-color: var(--gray-900);
   color: var(--gray-100);
   -webkit-font-smoothing: antialiased;
-  
-  max-width: 1120px;
+  min-height: 100vh;
   margin: 0 auto;
 }
 

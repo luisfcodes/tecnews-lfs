@@ -1,5 +1,7 @@
-.container {
-  margin: 5rem 0;
+.listPosts {
+  margin: 9rem 15%;
+  position: absolute;
+  width: 70%;
 }
 
 .post {
@@ -19,6 +21,10 @@
     &:hover {
       color: var(--yellow-500);
     }
+  }
+
+  p {
+    color: var(--gray-300);
   }
 
   img {
