@@ -24,14 +24,44 @@ interface HomeProps {
   nextPage: string
 }
 
-const Home: NextPage<HomeProps> = ({results, nextPage}) => {
+const Home: NextPage<HomeProps> = ({ results, nextPage }) => {
 
-  const [posts, setPosts] = useState<HomeProps>({results, nextPage})
+  const [posts, setPosts] = useState<HomeProps>({ results, nextPage })
 
   function handleNextPage() {
-    fetch(posts.nextPage)
-    .then(response => response.json())
-    .then(data => console.log(data))
+    if (posts.nextPage) {
+      fetch(posts.nextPage)
+        .then(response => response.json())
+        .then(data => {
+          const results = data.results.map((post: any) => {
+            return {
+              id: post.id,
+              uid: post.uid,
+              createdAt: post.first_publication_date,
+              data: {
+                title: post.data.title[0].text,
+                contentPreview: post.data.content[0].paragraph[0].text.substring(0, 200),
+                author: post.data.author[0].text,
+                banner: post.data.banner.url,
+                content: post.data.content.map((content: any) => {
+                  return {
+                    subtitle: content.subtitle[0] ? content.subtitle[0].text : '',
+                    paragraph: content.paragraph[0].text
+                  }
+                })
+              }
+            }
+          })
+
+          const newPosts = [...posts.results]
+
+          results.map((post: any) => newPosts.push(post))
+
+          setPosts({ results: newPosts, nextPage: data.next_page })
+
+        })
+    }
+
   }
 
   return (
@@ -56,7 +86,7 @@ const Home: NextPage<HomeProps> = ({results, nextPage}) => {
           ))}
         </ul>
 
-        {nextPage && (
+        {posts.nextPage && (
           <button onClick={handleNextPage}>Carregar mais posts...</button>
         )}
       </main>
@@ -66,7 +96,7 @@ const Home: NextPage<HomeProps> = ({results, nextPage}) => {
 
 export default Home
 
-export const getStaticProps: GetStaticProps =  async ({ previewData }) => {
+export const getStaticProps: GetStaticProps = async ({ previewData }) => {
   const client = createClient({ previewData })
 
   const page = await client.getByType('post', {
@@ -80,16 +110,16 @@ export const getStaticProps: GetStaticProps =  async ({ previewData }) => {
       createdAt: post.first_publication_date,
       data: {
         title: post.data.title[0].text,
-        contentPreview: post.data.content[0].paragraph[0].text.substring(0,200),
+        contentPreview: post.data.content[0].paragraph[0].text.substring(0, 200),
         author: post.data.author[0].text,
         banner: post.data.banner.url,
         content: post.data.content.map((content: any) => {
-            return {
-              subtitle: content.subtitle[0] ? content.subtitle[0].text : '',
-              paragraph: content.paragraph[0].text
-            }
-         })
-        }
+          return {
+            subtitle: content.subtitle[0] ? content.subtitle[0].text : '',
+            paragraph: content.paragraph[0].text
+          }
+        })
+      }
     }
   })
 
