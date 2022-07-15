@@ -1,6 +1,7 @@
 import type { GetStaticProps, NextPage } from 'next'
 import Head from 'next/head'
 import Link from 'next/link'
+import { useState } from 'react'
 import { createClient } from '../services/prismicio'
 import styles from '../styles/Home.module.scss'
 
@@ -19,10 +20,20 @@ interface HomeProps {
         paragraph: string;
       }[]
     }
-  }[]
+  }[],
+  nextPage: string
 }
 
-const Home: NextPage<HomeProps> = ({results}) => {
+const Home: NextPage<HomeProps> = ({results, nextPage}) => {
+
+  const [posts, setPosts] = useState<HomeProps>({results, nextPage})
+
+  function handleNextPage() {
+    fetch(posts.nextPage)
+    .then(response => response.json())
+    .then(data => console.log(data))
+  }
+
   return (
     <div>
       <Head>
@@ -30,9 +41,9 @@ const Home: NextPage<HomeProps> = ({results}) => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main>
-        <ul className={styles.listPosts}>
-          {results.map(post => (
+      <main className={styles.container}>
+        <ul>
+          {posts.results.map(post => (
             <li className={styles.post} key={post.id}>
               <img src={post.data.banner} alt="Banner do post" />
               <div>
@@ -44,6 +55,10 @@ const Home: NextPage<HomeProps> = ({results}) => {
             </li>
           ))}
         </ul>
+
+        {nextPage && (
+          <button onClick={handleNextPage}>Carregar mais posts...</button>
+        )}
       </main>
     </div>
   )
@@ -54,9 +69,11 @@ export default Home
 export const getStaticProps: GetStaticProps =  async ({ previewData }) => {
   const client = createClient({ previewData })
 
-  const page = await client.getAllByType('post')
+  const page = await client.getByType('post', {
+    pageSize: 2
+  })
 
-  const results = page.map(post => {
+  const results = page.results.map(post => {
     return {
       id: post.id,
       uid: post.uid,
@@ -78,7 +95,8 @@ export const getStaticProps: GetStaticProps =  async ({ previewData }) => {
 
   return {
     props: {
-      results
+      results,
+      nextPage: page.next_page ? page.next_page : ''
     },
     revalidate: 60 * 60 * 24 //24 hours
   }
