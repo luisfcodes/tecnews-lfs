@@ -100,7 +100,7 @@ export const getStaticProps: GetStaticProps = async ({ previewData }) => {
   const client = createClient({ previewData })
 
   const page = await client.getByType('post', {
-    pageSize: 2
+    pageSize: 5
   })
 
   const results = page.results.map(post => {
